@@ -22,6 +22,8 @@ public abstract class Cell {
                 .build();
     }
 
+    public abstract boolean isMine();
+
     public static Cell fromString(String character, int x, int y, MinesField minesField) {
         if(character.equals("*")) {
             return new Mine(x, y, minesField);
@@ -32,13 +34,18 @@ public abstract class Cell {
         }
     }
 
-
-    public abstract boolean isMine();
-
+    /**
+     * Returns the neighbouring cells of the current cell.
+     * @return neighbouring cells of the current cell.
+     */
     public List<Cell> getNeighbourhood() {
         return minesField.getCellNeighbourhood(this);
     }
 
+    /**
+     * Find out the number of mines around the current cell.
+     * @return number of mines around the current cell
+     */
     public int getMinesCountAround() {
         return (int) getNeighbourhood().stream()
                 .filter(Cell::isMine)
