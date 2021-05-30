@@ -1,7 +1,9 @@
 package minesweeper.cheats;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import minesweeper.cheats.models.Cell;
 import minesweeper.cheats.models.CellPosition;
 
@@ -10,13 +12,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MinesField {
 
-    private final Cell[][] minesField;
-    private final int fieldHeight;
-    private final int fieldWidth;
+    private Cell[][] minesField;
+    private int fieldHeight;
+    private int fieldWidth;
 
     public MinesField(Cell[][] minesField) {
         this.minesField = minesField;
@@ -24,6 +28,11 @@ public class MinesField {
         this.fieldWidth = minesField[0].length;
     }
 
+    /**
+     * Returns the neighbourhood of the cell.
+     * @param cell
+     * @return
+     */
     public List<Cell> getCellNeighbourhood(Cell cell) {
         List<CellPosition> neighbouringCellPositions = generateNeighbouringCellPositions(cell);
         return neighbouringCellPositions.stream()
@@ -35,6 +44,11 @@ public class MinesField {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns a list of positions of cell's neighbouring cells.
+     * @param cell
+     * @return
+     */
     private List<CellPosition> generateNeighbouringCellPositions(Cell cell) {
         int cellYPosition = cell.getCellPosition().getY();
         int cellXPosition = cell.getCellPosition().getX();

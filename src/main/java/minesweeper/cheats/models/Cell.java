@@ -1,6 +1,5 @@
 package minesweeper.cheats.models;
 
-import lombok.Builder;
 import lombok.Getter;
 import minesweeper.cheats.MinesField;
 import minesweeper.cheats.exceptions.InvalidCellCharacterException;
@@ -8,7 +7,6 @@ import minesweeper.cheats.exceptions.InvalidCellCharacterException;
 import java.util.List;
 
 @Getter
-@Builder
 public abstract class Cell {
 
     protected CellPosition cellPosition;

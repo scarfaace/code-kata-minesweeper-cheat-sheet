@@ -1,38 +1,46 @@
-package minesweeper.cheats.factory;
+package minesweeper.cheats;
 
 import lombok.Builder;
 import lombok.Getter;
-import minesweeper.cheats.MinesField;
 import minesweeper.cheats.models.Cell;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.IntStream;
 
-public class MinesFieldFactory {
+public class MinesFieldCreator {
 
     public MinesField fromTxt(String txtFilePath) {
-        try {
-            FieldDimensions fieldDimensions = getFieldDimensions(txtFilePath);
-            Cell[][] minesField = new Cell[fieldDimensions.getHeight()][fieldDimensions.getWidth()];
+        FieldDimensions fieldDimensions = getFieldDimensions(txtFilePath);
+        MinesField minesField = new MinesField();
+        Cell[][] minesFieldArray = new Cell[fieldDimensions.getHeight()][fieldDimensions.getWidth()];
 
+        try {
             int lineNumber = 0;
             File myObj = new File(txtFilePath);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String[] lineCharacters = myReader.nextLine().split("");
-                Cell[] cells = Arrays.stream(lineCharacters)
-                        .map(character -> )
-                minesField[lineNumber] = lineCharacters;
+                int yCoordinate = lineNumber;
+                Cell[] cellsLine = IntStream.range(0, fieldDimensions.getWidth())
+                        .mapToObj(charIndex -> Cell.fromString(lineCharacters[charIndex], charIndex, yCoordinate, minesField))
+                        .toArray(Cell[]::new);
+                minesFieldArray[lineNumber] = cellsLine;
+                lineNumber += 1;
             }
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("Failed reading field file.");
             e.printStackTrace();
         }
+
+        minesField.setFieldHeight(fieldDimensions.getHeight());
+        minesField.setFieldWidth(fieldDimensions.getWidth());
+        minesField.setMinesField(minesFieldArray);
+        return minesField;
     }
 
     private FieldDimensions getFieldDimensions(String txtFilePath) {
@@ -69,8 +77,8 @@ public class MinesFieldFactory {
 
     @Getter
     @Builder
-    private class FieldDimensions {
-        private int height;
-        private int width;
+    private static class FieldDimensions {
+        private final int height;
+        private final int width;
     }
 }
